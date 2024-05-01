@@ -1,3 +1,9 @@
+/*
+prettylogger is a minimalistic server logging framework that prints out the request time, duration, http verb, url path, and color coded response code.
+You start by passing all the places you want to log to that satify the io.Writer interface to the NewPrettyLogger function. Common places might be STDOUT or a log file.
+This will return a PrettyLogger struct.
+You can then use the PrettyLoggerMiddleWare function on the struct to wrap any http.Handlerfunc.
+*/
 package prettylogger
 
 import (
@@ -38,10 +44,12 @@ func (w *wrappedWriter) FormatCode() string {
 	return red + statusString + reset
 }
 
+/* This struct is the main object of the prettylogger package. You can create one of these yourself with you output locations as writers, or use the NewPrettyLogger function */
 type PrettyLogger struct {
 	Output io.Writer
 }
 
+/* Pass all the places you want to log to as writers and this will  return a new PrettyLogger struct for you to use */
 func NewPrettyLogger(writers ...io.Writer) PrettyLogger {
 	if len(writers) == 0 {
 		return PrettyLogger{Output: os.Stdout}
@@ -49,6 +57,7 @@ func NewPrettyLogger(writers ...io.Writer) PrettyLogger {
 	return PrettyLogger{Output: io.MultiWriter(writers...)}
 }
 
+/* Once you have a PrettyLogger struct, use this function on the struct to wrap http.Handlefunc in order to log all the requests that go though it. */
 func (p PrettyLogger) PrettyLoggerMiddleWare(f func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
