@@ -70,7 +70,7 @@ func (p PrettyLogger) PrettyLoggerMiddleWare(f func(http.ResponseWriter, *http.R
 
 		f(wrapped, r)
 
-		fmt.Fprintf(p.Output, "%s %s %s %s %s", start.Format("2006/01/02 15:04:05"), time.Since(start).String(), r.Method, r.URL.Path, wrapped.FormatCode())
+		fmt.Fprintf(p.Output, "%s %s %s %s %s\n", start.Format("2006/01/02 15:04:05"), time.Since(start).String(), r.Method, r.URL.Path, wrapped.FormatCode())
 
 	}
 }
